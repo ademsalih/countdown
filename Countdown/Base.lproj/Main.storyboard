@@ -869,6 +869,7 @@
                     </view>
                     <connections>
                         <outlet property="datePickerField" destination="2Cy-Gp-Lty" id="mLQ-MT-dwN"/>
+                        <outlet property="tableView" destination="b7i-oG-g4n" id="zrm-gJ-Qtw"/>
                         <outlet property="titleField" destination="GTh-2A-F2d" id="BjT-N8-Ybq"/>
                     </connections>
                 </viewController>

@@ -15,13 +15,13 @@ class ViewController: NSViewController {
 
     @IBOutlet weak var datePickerField: NSDatePicker!
     
+    @IBOutlet weak var tableView: NSTableView!
     @objc dynamic var events: [Event] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         events = getEvents()
-        
     }
 
     override var representedObject: Any? {
@@ -77,6 +77,8 @@ class ViewController: NSViewController {
             print("no")
         }
         
+        events = getEvents()
+        tableView.reloadData()
     }
     
     func getDocumentsDirectory() -> URL {
