@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D244ECFD22FF4F20004AAD86 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D244ECFC22FF4F20004AAD86 /* EventModel.swift */; };
 		D2FB7F5122F80F0D00F023E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FB7F5022F80F0D00F023E9 /* AppDelegate.swift */; };
 		D2FB7F5322F80F0D00F023E9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FB7F5222F80F0D00F023E9 /* ViewController.swift */; };
 		D2FB7F5622F80F0D00F023E9 /* Countdown.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D2FB7F5422F80F0D00F023E9 /* Countdown.xcdatamodeld */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D244ECFC22FF4F20004AAD86 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		D2FB7F4D22F80F0D00F023E9 /* Countdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Countdown.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2FB7F5022F80F0D00F023E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D2FB7F5222F80F0D00F023E9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 				D2FB7F5022F80F0D00F023E9 /* AppDelegate.swift */,
 				D2FB7F5222F80F0D00F023E9 /* ViewController.swift */,
 				D2FB7F6522F8255F00F023E9 /* Event.swift */,
+				D244ECFC22FF4F20004AAD86 /* EventModel.swift */,
 				D2FB7F5722F80F0D00F023E9 /* Assets.xcassets */,
 				D2FB7F5922F80F0D00F023E9 /* Main.storyboard */,
 				D2FB7F5C22F80F0D00F023E9 /* Info.plist */,
@@ -142,6 +145,7 @@
 				D2FB7F6622F8255F00F023E9 /* Event.swift in Sources */,
 				D2FB7F5322F80F0D00F023E9 /* ViewController.swift in Sources */,
 				D2FB7F5622F80F0D00F023E9 /* Countdown.xcdatamodeld in Sources */,
+				D244ECFD22FF4F20004AAD86 /* EventModel.swift in Sources */,
 				D2FB7F5122F80F0D00F023E9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

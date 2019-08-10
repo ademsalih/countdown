@@ -61,7 +61,7 @@ class ViewController: NSViewController {
             }
         }
         
-        var item: [String: String] = [:]
+        var item: [String: Any] = [:]
         
         item["name"] = title
         item["date"] = date
@@ -69,7 +69,6 @@ class ViewController: NSViewController {
         newArray.append(item)
     
         let text = json(from: newArray)
-        
         
         do {
             try text?.write(to: filename!, atomically: true, encoding: String.Encoding.utf8)
@@ -121,6 +120,8 @@ class ViewController: NSViewController {
                 events.append(event)
             }
         }
+        
+        events.sort(by: { $0.daysLeft < $1.daysLeft })
         
         return events
     }
