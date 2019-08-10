@@ -32,14 +32,73 @@ class ViewController: NSViewController {
     
     @IBAction func addEventButtonAction(_ sender: Any) {
         
+        let eventTitle = titleField.stringValue
+        let date = datePickerField.dateValue
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd'-'MM'-'yyyy"
+        
+        let eventDate = dateFormatter.string(from: date)
+        
+        addNewEventWith(title: eventTitle, date: eventDate)
+    }
+    
+    func addNewEventWith(title: String, date: String) {
+        
+        var newArray: [[String: Any]] = []
+        
+        let fileURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        
+        let filename = fileURL?.appendingPathComponent("events.json")
+        
+
+        let data = try! Data(contentsOf: filename!)
+        let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
+        
+        if let jsonArray = JSON as? [[String: Any]] {
+            for item in jsonArray {
+                newArray.append(item)
+            }
+        }
+        
+        var item: [String: String] = [:]
+        
+        item["name"] = title
+        item["date"] = date
+        
+        newArray.append(item)
+    
+        let text = json(from: newArray)
+        
+        
+        do {
+            try text?.write(to: filename!, atomically: true, encoding: String.Encoding.utf8)
+        } catch {
+            print("no")
+        }
+        
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    func json(from object:Any) -> String? {
+        guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
+            return nil
+        }
+        return String(data: data, encoding: String.Encoding.utf8)
     }
     
     func getEvents() -> [Event] {
         
         var events: [Event] = []
         
-        let url = Bundle.main.url(forResource: "events", withExtension: "json")!
-        let data = try! Data(contentsOf: url)
+        let fileURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        let filename = fileURL?.appendingPathComponent("events.json")
+        
+        let data = try! Data(contentsOf: filename!)
         let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
         
         if let jsonArray = JSON as? [[String: Any]] {

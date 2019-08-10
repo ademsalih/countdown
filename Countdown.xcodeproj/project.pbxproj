@@ -12,7 +12,6 @@
 		D2FB7F5622F80F0D00F023E9 /* Countdown.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D2FB7F5422F80F0D00F023E9 /* Countdown.xcdatamodeld */; };
 		D2FB7F5822F80F0D00F023E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2FB7F5722F80F0D00F023E9 /* Assets.xcassets */; };
 		D2FB7F5B22F80F0D00F023E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2FB7F5922F80F0D00F023E9 /* Main.storyboard */; };
-		D2FB7F6422F81DE000F023E9 /* events.json in Resources */ = {isa = PBXBuildFile; fileRef = D2FB7F6322F81DE000F023E9 /* events.json */; };
 		D2FB7F6622F8255F00F023E9 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FB7F6522F8255F00F023E9 /* Event.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +24,6 @@
 		D2FB7F5A22F80F0D00F023E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D2FB7F5C22F80F0D00F023E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2FB7F5D22F80F0D00F023E9 /* Countdown.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Countdown.entitlements; sourceTree = "<group>"; };
-		D2FB7F6322F81DE000F023E9 /* events.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = events.json; sourceTree = "<group>"; };
 		D2FB7F6522F8255F00F023E9 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,7 +60,6 @@
 				D2FB7F5022F80F0D00F023E9 /* AppDelegate.swift */,
 				D2FB7F5222F80F0D00F023E9 /* ViewController.swift */,
 				D2FB7F6522F8255F00F023E9 /* Event.swift */,
-				D2FB7F6322F81DE000F023E9 /* events.json */,
 				D2FB7F5722F80F0D00F023E9 /* Assets.xcassets */,
 				D2FB7F5922F80F0D00F023E9 /* Main.storyboard */,
 				D2FB7F5C22F80F0D00F023E9 /* Info.plist */,
@@ -132,7 +129,6 @@
 			files = (
 				D2FB7F5822F80F0D00F023E9 /* Assets.xcassets in Resources */,
 				D2FB7F5B22F80F0D00F023E9 /* Main.storyboard in Resources */,
-				D2FB7F6422F81DE000F023E9 /* events.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,7 +291,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = ademsalih.Countdown;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -315,7 +311,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = ademsalih.Countdown;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
