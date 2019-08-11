@@ -21,6 +21,8 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.delegate = self
+        
         events = getEvents()
     }
 
@@ -67,8 +69,22 @@ class ViewController: NSViewController {
         item["date"] = date
         
         newArray.append(item)
-    
-        let text = json(from: newArray)
+        
+        
+        
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd'-'MM'-'yyyy"
+        
+        let sorted = newArray.sorted { left, right in
+            let leftDate = dateFormatter.date(from: left["date"] as! String)!
+            let rightDate = dateFormatter.date(from: right["date"] as! String)!
+            // NSDate doesn't have a < operator, so use the Foundation compare method
+            return leftDate.compare(rightDate) == .orderedAscending
+        }
+        
+        
+        let text = json(from: sorted)
         
         do {
             try text?.write(to: filename!, atomically: true, encoding: String.Encoding.utf8)
@@ -121,10 +137,16 @@ class ViewController: NSViewController {
             }
         }
         
-        events.sort(by: { $0.daysLeft < $1.daysLeft })
-        
         return events
     }
 
+}
+
+extension ViewController: NSTableViewDelegate {
+    
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        print((notification.object as? NSTableView)!.selectedRow)
+        
+    }
 }
 
