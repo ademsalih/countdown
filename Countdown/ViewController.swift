@@ -15,6 +15,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var datePickerField: NSDatePicker!
     @IBOutlet weak var tableView: NSTableView!
     @objc dynamic var events: [Event] = []
+    var currentSelectedEvent: Int = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,13 +130,41 @@ class ViewController: NSViewController {
         return events
     }
 
+    @IBAction func deleteEventButtonAction(_ sender: Any) {
+        
+        var currentEvents: [[String: Any]] = []
+        
+        // Get JSON file with events in Application Support
+        let fileURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        let filename = fileURL?.appendingPathComponent("events.json")
+        
+        let data = try! Data(contentsOf: filename!)
+        let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
+        
+        if let jsonArray = JSON as? [[String: Any]] {
+            for item in jsonArray {
+                currentEvents.append(item)
+            }
+        }
+        
+        currentEvents.remove(at: currentSelectedEvent)
+    
+        let jsonString = json(from: currentEvents)
+        
+        do {
+            try jsonString?.write(to: filename!, atomically: true, encoding: String.Encoding.utf8)
+        } catch {
+            print("Error: Could not write JSON to file")
+        }
+        
+        updateTableView()
+    }
 }
 
 extension ViewController: NSTableViewDelegate {
     
     func tableViewSelectionDidChange(_ notification: Notification) {
-        print((notification.object as? NSTableView)!.selectedRow)
-        
+        currentSelectedEvent = (notification.object as? NSTableView)!.selectedRow
     }
 }
 
