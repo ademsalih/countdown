@@ -12,86 +12,80 @@ import Foundation
 class ViewController: NSViewController {
 
     @IBOutlet weak var titleField: NSTextField!
-
     @IBOutlet weak var datePickerField: NSDatePicker!
-    
     @IBOutlet weak var tableView: NSTableView!
     @objc dynamic var events: [Event] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.delegate = self
-        
         events = getEvents()
     }
 
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
         }
     }
     
+    func getDateFormatter() -> DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd'-'MM'-'yyyy"
+        return dateFormatter
+    }
+    
     @IBAction func addEventButtonAction(_ sender: Any) {
-        
         let eventTitle = titleField.stringValue
         let date = datePickerField.dateValue
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd'-'MM'-'yyyy"
-        
+        let dateFormatter = getDateFormatter()
         let eventDate = dateFormatter.string(from: date)
         
-        addNewEventWith(title: eventTitle, date: eventDate)
+        addNewEvent(title: eventTitle, date: eventDate)
     }
     
-    func addNewEventWith(title: String, date: String) {
+    func addNewEvent(title: String, date: String) {
+        var currentEvents: [[String: Any]] = []
         
-        var newArray: [[String: Any]] = []
-        
+        // Get JSON file with events in Application Support
         let fileURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-        
         let filename = fileURL?.appendingPathComponent("events.json")
         
-
         let data = try! Data(contentsOf: filename!)
         let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
         
         if let jsonArray = JSON as? [[String: Any]] {
             for item in jsonArray {
-                newArray.append(item)
+                currentEvents.append(item)
             }
         }
         
-        var item: [String: Any] = [:]
+        var newEvent: [String: Any] = [:]
         
-        item["name"] = title
-        item["date"] = date
+        newEvent["name"] = title
+        newEvent["date"] = date
         
-        newArray.append(item)
+        currentEvents.append(newEvent)
         
+        let dateFormatter = getDateFormatter()
         
-        
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd'-'MM'-'yyyy"
-        
-        let sorted = newArray.sorted { left, right in
+        let allEventsSorted = currentEvents.sorted { left, right in
             let leftDate = dateFormatter.date(from: left["date"] as! String)!
             let rightDate = dateFormatter.date(from: right["date"] as! String)!
-            // NSDate doesn't have a < operator, so use the Foundation compare method
             return leftDate.compare(rightDate) == .orderedAscending
         }
         
-        
-        let text = json(from: sorted)
+        let jsonString = json(from: allEventsSorted)
         
         do {
-            try text?.write(to: filename!, atomically: true, encoding: String.Encoding.utf8)
+            try jsonString?.write(to: filename!, atomically: true, encoding: String.Encoding.utf8)
         } catch {
-            print("no")
+            print("Error: Could not write JSON to file")
         }
         
+        updateTableView()
+    }
+    
+    func updateTableView() {
         events = getEvents()
         tableView.reloadData()
     }
@@ -123,16 +117,11 @@ class ViewController: NSViewController {
                 let title = item["name"] as? String ?? "No Title"
                 let date = item["date"] as? String ?? "No Date"
                 
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd'-'MM'-'yyyy"
-                
+                let dateFormatter = getDateFormatter()
                 let eventDate = dateFormatter.date(from: date)!
-                
-                let now = Date()
-                
-                let diffInDays = Calendar.current.dateComponents([.day], from: now, to: eventDate).day
+                let days = Calendar.current.dateComponents([.day], from: Date(), to: eventDate).day
 
-                let event = Event(title: title, daysLeft: diffInDays! + 1)
+                let event = Event(title: title, daysLeft: days!)
                 events.append(event)
             }
         }
