@@ -20,6 +20,7 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
+        datePickerField.dateValue = Date()
         events = getEvents()
     }
 
@@ -42,6 +43,8 @@ class ViewController: NSViewController {
         let eventDate = dateFormatter.string(from: date)
         
         addNewEvent(title: eventTitle, date: eventDate)
+        
+        titleField.stringValue = ""
     }
     
     func addNewEvent(title: String, date: String) {
@@ -104,41 +107,30 @@ class ViewController: NSViewController {
     }
     
     func getEvents() -> [Event] {
-        
         var events: [Event] = []
+        let eventsFromJSON = getEventsFromJSON()
         
-        let fileURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-        let filename = fileURL?.appendingPathComponent("events.json")
-        
-        let data = try! Data(contentsOf: filename!)
-        let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
-        
-        if let jsonArray = JSON as? [[String: Any]] {
-            for item in jsonArray {
-                let title = item["name"] as? String ?? "No Title"
-                let date = item["date"] as? String ?? "No Date"
-                
-                let dateFormatter = getDateFormatter()
-                let eventDate = dateFormatter.date(from: date)!
-                let days = Calendar.current.dateComponents([.day], from: Date(), to: eventDate).day
-
-                let event = Event(title: title, daysLeft: days!)
-                events.append(event)
-            }
+        for item in eventsFromJSON {
+            let title = item["name"] as? String ?? "No Title"
+            let date = item["date"] as? String ?? "No Date"
+            
+            let eventDate = getDateFormatter().date(from: date)!
+            let days = Calendar.current.dateComponents([.day], from: Date(), to: eventDate).day
+            
+            let event = Event(title: title, daysLeft: days!)
+            events.append(event)
         }
-        
+
         return events
     }
-
-    @IBAction func deleteEventButtonAction(_ sender: Any) {
-        
+    
+    func getEventsFromJSON() -> [[String:Any]]{
         var currentEvents: [[String: Any]] = []
         
         // Get JSON file with events in Application Support
-        let fileURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-        let filename = fileURL?.appendingPathComponent("events.json")
+        let fileURL = getEventsFileURL()
         
-        let data = try! Data(contentsOf: filename!)
+        let data = try! Data(contentsOf: fileURL)
         let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
         
         if let jsonArray = JSON as? [[String: Any]] {
@@ -147,17 +139,34 @@ class ViewController: NSViewController {
             }
         }
         
-        currentEvents.remove(at: currentSelectedEvent)
+        return currentEvents
+    }
     
-        let jsonString = json(from: currentEvents)
+    func getEventsFileURL() -> URL {
+        let fileLocationURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        let fileURL = fileLocationURL?.appendingPathComponent("events.json")
+        return fileURL!
+    }
+
+    @IBAction func deleteEventButtonAction(_ sender: Any) {
         
-        do {
-            try jsonString?.write(to: filename!, atomically: true, encoding: String.Encoding.utf8)
-        } catch {
-            print("Error: Could not write JSON to file")
+        if currentSelectedEvent > -1 {
+            var currentEvents = getEventsFromJSON()
+            currentEvents.remove(at: currentSelectedEvent)
+            
+            let jsonString = json(from: currentEvents)
+            
+            do {
+                try jsonString?.write(to: getEventsFileURL(), atomically: true, encoding: String.Encoding.utf8)
+            } catch {
+                print("Error: Could not write JSON to file")
+            }
+            
+            updateTableView()
+            
+            currentSelectedEvent = -1
         }
         
-        updateTableView()
     }
 }
 
