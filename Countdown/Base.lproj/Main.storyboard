@@ -685,7 +685,7 @@
             <objects>
                 <windowController storyboardIdentifier="mainWindow" id="B8D-0N-5wS" sceneMemberID="viewController">
                     <window key="window" title="Countdown" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
                         <rect key="contentRect" x="459" y="561" width="480" height="350"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <connections>
@@ -843,7 +843,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="deleteEventButtonAction:" target="XfG-lQ-9wD" id="VI6-iL-rLE"/>
+                                    <action selector="deleteButtonAction:" target="XfG-lQ-9wD" id="yfE-ha-6qM"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s2u-DZ-pby">
@@ -861,6 +861,7 @@
                     </view>
                     <connections>
                         <outlet property="datePickerField" destination="2Cy-Gp-Lty" id="mLQ-MT-dwN"/>
+                        <outlet property="deleteButton" destination="7DM-a1-5Yg" id="0SR-Ta-NRZ"/>
                         <outlet property="tableView" destination="b7i-oG-g4n" id="zrm-gJ-Qtw"/>
                         <outlet property="titleField" destination="GTh-2A-F2d" id="BjT-N8-Ybq"/>
                     </connections>

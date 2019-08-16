@@ -11,16 +11,20 @@ import Foundation
 
 class ViewController: NSViewController {
 
+    var currentSelectedEvent: Int = -1
+    @objc dynamic var events: [Event] = []
+    
     @IBOutlet weak var titleField: NSTextField!
     @IBOutlet weak var datePickerField: NSDatePicker!
     @IBOutlet weak var tableView: NSTableView!
-    @objc dynamic var events: [Event] = []
-    var currentSelectedEvent: Int = -1
+    @IBOutlet weak var deleteButton: NSButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         datePickerField.dateValue = Date()
+        deleteButton.isEnabled = false
         events = getEvents()
     }
 
@@ -45,6 +49,7 @@ class ViewController: NSViewController {
         addNewEvent(title: eventTitle, date: eventDate)
         
         titleField.stringValue = ""
+        deleteButton.isEnabled = false
     }
     
     func addNewEvent(title: String, date: String) {
@@ -117,7 +122,7 @@ class ViewController: NSViewController {
             let eventDate = getDateFormatter().date(from: date)!
             let days = Calendar.current.dateComponents([.day], from: Date(), to: eventDate).day
             
-            let event = Event(title: title, daysLeft: days!)
+            let event = Event(title: title, daysLeft: days! + 1)
             events.append(event)
         }
 
@@ -127,53 +132,82 @@ class ViewController: NSViewController {
     func getEventsFromJSON() -> [[String:Any]]{
         var currentEvents: [[String: Any]] = []
         
-        // Get JSON file with events in Application Support
-        let fileURL = getEventsFileURL()
-        
-        let data = try! Data(contentsOf: fileURL)
-        let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
-        
-        if let jsonArray = JSON as? [[String: Any]] {
-            for item in jsonArray {
-                currentEvents.append(item)
+        do {
+            var fileURL: URL
+            
+            if !FileManager.default.fileExists(atPath: getFileURL(for: "events.json", at: getWorkingDirectory()).path) {
+                let emptyString: String = "[]"
+                
+                try emptyString.write(to: getFileURL(for: "events.json", at: getWorkingDirectory()), atomically: true, encoding: String.Encoding.utf8)
+
             }
+            
+            fileURL = getFileURL(for: "events.json", at: getWorkingDirectory())
+            
+            let data = try! Data(contentsOf: fileURL)
+            let JSON = try! JSONSerialization.jsonObject(with: data, options: [])
+            
+            if let jsonArray = JSON as? [[String: Any]] {
+                for item in jsonArray {
+                    currentEvents.append(item)
+                }
+            }
+        } catch {
+            print("No file called events.json")
         }
         
         return currentEvents
     }
     
-    func getEventsFileURL() -> URL {
-        let fileLocationURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-        let fileURL = fileLocationURL?.appendingPathComponent("events.json")
-        return fileURL!
+    func getFileURL(for file: String, at url: URL) -> URL {
+        let fileLocationURL = url
+        let fileURL = fileLocationURL.appendingPathComponent(file)
+        return fileURL
     }
-
-    @IBAction func deleteEventButtonAction(_ sender: Any) {
-        
+    
+    func getWorkingDirectory() -> URL {
+        let workingDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        return workingDir!
+    }
+    
+    @IBAction func deleteButtonAction(_ sender: Any) {
         if currentSelectedEvent > -1 {
             var currentEvents = getEventsFromJSON()
             currentEvents.remove(at: currentSelectedEvent)
-            
             let jsonString = json(from: currentEvents)
             
             do {
-                try jsonString?.write(to: getEventsFileURL(), atomically: true, encoding: String.Encoding.utf8)
+                let fileURL = getFileURL(for: "events.json", at: getWorkingDirectory())
+                try jsonString?.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
             } catch {
                 print("Error: Could not write JSON to file")
             }
             
             updateTableView()
-            
             currentSelectedEvent = -1
+            deleteButton.isEnabled = false
         }
-        
     }
+    
+
 }
 
 extension ViewController: NSTableViewDelegate {
     
     func tableViewSelectionDidChange(_ notification: Notification) {
-        currentSelectedEvent = (notification.object as? NSTableView)!.selectedRow
+        
+        let selectedRow = (notification.object as? NSTableView)!.selectedRow
+        
+        currentSelectedEvent = selectedRow
+        
+        print(selectedRow)
+        
+        if selectedRow < 0 {
+            deleteButton.isEnabled = false
+        } else {
+            deleteButton.isEnabled = true
+        }
     }
+    
 }
 
