@@ -36,6 +36,7 @@ class ViewController: NSViewController {
     func getDateFormatter() -> DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd'-'MM'-'yyyy"
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
         return dateFormatter
     }
     
@@ -120,9 +121,12 @@ class ViewController: NSViewController {
             let date = item["date"] as? String ?? "No Date"
             
             let eventDate = getDateFormatter().date(from: date)!
-            let days = Calendar.current.dateComponents([.day], from: Date(), to: eventDate).day
+            let todaysDate = getDateFormatter().date(from: getDateFormatter().string(from: Date()))!
             
-            let event = Event(title: title, daysLeft: days! + 1)
+            let days = Calendar.current.dateComponents([.day], from: todaysDate, to: eventDate).day
+
+            
+            let event = Event(title: title, daysLeft: days!)
             events.append(event)
         }
 
@@ -137,9 +141,7 @@ class ViewController: NSViewController {
             
             if !FileManager.default.fileExists(atPath: getFileURL(for: "events.json", at: getWorkingDirectory()).path) {
                 let emptyString: String = "[]"
-                
                 try emptyString.write(to: getFileURL(for: "events.json", at: getWorkingDirectory()), atomically: true, encoding: String.Encoding.utf8)
-
             }
             
             fileURL = getFileURL(for: "events.json", at: getWorkingDirectory())
