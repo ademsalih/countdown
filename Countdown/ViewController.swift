@@ -124,7 +124,6 @@ class ViewController: NSViewController {
             let todaysDate = getDateFormatter().date(from: getDateFormatter().string(from: Date()))!
             
             let days = Calendar.current.dateComponents([.day], from: todaysDate, to: eventDate).day
-
             
             let event = Event(title: title, daysLeft: days!)
             events.append(event)
